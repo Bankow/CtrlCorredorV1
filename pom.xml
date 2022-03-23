@@ -14,7 +14,7 @@
 	<name>CtrlCorredorV1</name>
 	<description>Projeto introdutório arquitetura</description>
 	<properties>
-		<java.version>15</java.version>
+		<java.version>11</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
