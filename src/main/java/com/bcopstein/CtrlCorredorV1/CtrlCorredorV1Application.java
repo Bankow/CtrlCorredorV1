@@ -15,6 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @ComponentScan(basePackages = { "com.bcopstein" })
 @EntityScan(basePackages = { "com.bcopstein" })
+
 public class CtrlCorredorV1Application {
 	public static void main(String[] args) {
 		SpringApplication.run(CtrlCorredorV1Application.class, args);

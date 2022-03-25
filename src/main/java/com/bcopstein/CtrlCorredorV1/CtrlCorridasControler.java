@@ -2,6 +2,9 @@ package com.bcopstein.CtrlCorredorV1;
 
 import java.util.List;
 
+import com.bcopstein.CtrlCorredorV1.Repositories.CorredorRepository;
+import com.bcopstein.CtrlCorredorV1.Repositories.ICorredorRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,17 +15,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @RequestMapping("/ctrlCorridas")
 public class CtrlCorridasControler {
     private JdbcTemplate jdbcTemplate;
     private EventoRepository repository;
 
+    private ICorredorRepository corredorRepository;
 
     @Autowired
-    public CtrlCorridasControler(JdbcTemplate jdbcTemplate) {
+    public CtrlCorridasControler(JdbcTemplate jdbcTemplate, CorredorRepository corredorRepository) {
         this.jdbcTemplate = jdbcTemplate;
+        this.corredorRepository = corredorRepository;
 
         this.jdbcTemplate.execute("DROP TABLE corredores IF EXISTS");
         this.jdbcTemplate.execute("CREATE TABLE corredores("
@@ -33,6 +37,9 @@ public class CtrlCorridasControler {
         repository.createTable();
         repository.dropTable();
 
+        this.corredorRepository.dropTable();
+        this.corredorRepository.createTable();
+        this.corredorRepository.insertData();
 
 
 /*        this.jdbcTemplate.batchUpdate(
@@ -43,22 +50,13 @@ public class CtrlCorridasControler {
     @RequestMapping(value = "/corredor", method = RequestMethod.GET)
     @CrossOrigin(origins = "*")
     public List<Corredor> consultaCorredor() {
-        List<Corredor> resp = this.jdbcTemplate.query("SELECT * from corredores",
-                (rs, rowNum) -> new Corredor(rs.getString("cpf"), rs.getString("nome"), rs.getInt("diaDn"),
-                        rs.getInt("mesDn"), rs.getInt("anoDn"), rs.getString("genero")));
-        return resp;
+        return this.corredorRepository.getAll();
     }
 
     @RequestMapping(value = "/corredor", method = RequestMethod.POST)
     @CrossOrigin(origins = "*")
     public boolean cadastraCorredor(@RequestBody final Corredor corredor) {
-        // Limpa a base de dados
-        this.jdbcTemplate.batchUpdate("DELETE from Corredores");
-        // Então cadastra o novo "corredor único"
-        this.jdbcTemplate.update("INSERT INTO corredores(cpf,nome,diaDn,mesDn,anoDn,genero) VALUES (?,?,?,?,?,?)",
-                corredor.getCpf(), corredor.getNome(), corredor.getDiaDn(), corredor.getMesDn(), corredor.getAnoDn(),
-                corredor.getGenero());
-        return true;
+        return this.corredorRepository.createCorredor(corredor);
     }
 
     @GetMapping("/eventos")
