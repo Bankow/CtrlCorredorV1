@@ -24,9 +24,10 @@ public class CtrlCorridasControler {
     private ICorredorRepository corredorRepository;
 
     @Autowired
-    public CtrlCorridasControler(JdbcTemplate jdbcTemplate, CorredorRepository corredorRepository) {
+    public CtrlCorridasControler(JdbcTemplate jdbcTemplate, CorredorRepository corredorRepository, EventoRepository eventoRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.corredorRepository = corredorRepository;
+        this.repository = eventoRepository;
 
         this.jdbcTemplate.execute("DROP TABLE corredores IF EXISTS");
         this.jdbcTemplate.execute("CREATE TABLE corredores("
