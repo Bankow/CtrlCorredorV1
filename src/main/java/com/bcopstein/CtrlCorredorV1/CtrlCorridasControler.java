@@ -34,8 +34,8 @@ public class CtrlCorridasControler {
 
         this.jdbcTemplate.batchUpdate(
                 "INSERT INTO corredores(cpf,nome,genero,diaDn,mesDn,anoDn) VALUES ('10001287','Luiz','masculino',22,5,1987)");
-        repository.createTable();
-        repository.dropTable();
+        this.repository.createTable();
+        this.repository.dropTable();
 
         this.corredorRepository.dropTable();
         this.corredorRepository.createTable();
@@ -62,12 +62,12 @@ public class CtrlCorridasControler {
     @GetMapping("/eventos")
     @CrossOrigin(origins = "*")
     public List<Evento> consultaEventos() {
-        return repository.selectTable();
+        return this.repository.selectTable();
     }
 
     @PostMapping("/eventos") // adiciona evento no único corredor
     @CrossOrigin(origins = "*")
     public boolean informaEvento(@RequestBody final Evento evento) {
-        return repository.updateTable(evento);
+        return this.repository.updateTable(evento);
     }
 }
