@@ -18,30 +18,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/ctrlCorridas")
 public class CtrlCorridasControler {
-    private JdbcTemplate jdbcTemplate;
     private EventoRepository repository;
 
     private ICorredorRepository corredorRepository;
 
     @Autowired
-    public CtrlCorridasControler(JdbcTemplate jdbcTemplate, CorredorRepository corredorRepository, EventoRepository eventoRepository) {
-        this.jdbcTemplate = jdbcTemplate;
+    public CtrlCorridasControler(CorredorRepository corredorRepository, EventoRepository eventoRepository) {
         this.corredorRepository = corredorRepository;
         this.repository = eventoRepository;
 
-        this.jdbcTemplate.execute("DROP TABLE corredores IF EXISTS");
-        this.jdbcTemplate.execute("CREATE TABLE corredores("
-                + "cpf VARCHAR(255), nome VARCHAR(255), genero VARCHAR(255), diaDn int, mesDn int, anoDn int, PRIMARY KEY(cpf))");
-
-        this.jdbcTemplate.batchUpdate(
-                "INSERT INTO corredores(cpf,nome,genero,diaDn,mesDn,anoDn) VALUES ('10001287','Luiz','masculino',22,5,1987)");
-        this.repository.createTable();
-        this.repository.dropTable();
-
+        
         this.corredorRepository.dropTable();
         this.corredorRepository.createTable();
         this.corredorRepository.insertData();
-
+        
+        this.repository.dropTable();
+        this.repository.createTable();
 
 /*        this.jdbcTemplate.batchUpdate(
                 "INSERT INTO eventos(id,nome,dia,mes,ano,distancia,horas,minutos,segundos) VALUES" +
